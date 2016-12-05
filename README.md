@@ -14,7 +14,8 @@ Getting the library to work:
 ```
 
 These lines allow the compiler to use the library.
-4. An instance of the robot object can now be created by using the line:
+
+An instance of the robot object can now be created by using the line:
 
 ```
 SirHenry bot;
