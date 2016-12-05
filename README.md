@@ -8,19 +8,15 @@ Getting the library to work:
 
 
 ```
-#!arduino
 #include <Servo.h>
 #include <NewPing.h>
 #include <SirHenry.h>
-
 ```
 
 These lines allow the compiler to use the library.
 4. An instance of the robot object can now be created by using the line:
 
 ```
-#!arduino
-
 SirHenry bot;
 ```
 5. You are now ready to start writing your own programs that can make the robot do just about anything. Your imagination is the limit.
