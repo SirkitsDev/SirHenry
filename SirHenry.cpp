@@ -149,23 +149,23 @@ void SirHenry::moveForeward(int dist)
 {
   for(uint8_t i = 0; i<dist;i++)
   {
-    motorAB(1);
+    motorAB(0);
   }
 }
 void SirHenry::moveBackward(int dist)
 {
   for(uint8_t i = 0; i<dist;i++)
   {
-    motorAB(0);
+    motorAB(1);
   }
 }
 void SirHenry::turnLeft(void)
 {
-  motorA(1);
+  motorB(1);
 }
 void SirHenry::turnRight(void)
 {
-  motorB(1);
+  motorA(1);
 }
 
 
@@ -240,8 +240,46 @@ int SirHenry::getDist()
   return dist;
 }
 
-uint8_t SirHenry::detect(uint8_t num)
-{
+uint8_t SirHenry::front_bumper(){
+
+    if(digitalRead(frontPin) == HIGH)
+      return 1;
+    else
+      return 0;
+}
+
+uint8_t SirHenry::rear_bumper(){
+
+    if(digitalRead(hindPin) == HIGH)
+      return 1;
+    else
+      return 0;
+}
+
+uint8_t SirHenry::left_bumper(){
+
+    if(digitalRead(leftPin) == HIGH)
+      return 1;
+    else
+      return 0;
+}
+
+uint8_t SirHenry::right_bumper(){
+
+    if(digitalRead(rightPin) == HIGH)
+      return 1;
+    else
+      return 0;
+}
+
+void SirHenry::detect(uint8_t bumper_arr[]){
+	
+	bumper_arr[0] = digitalRead(frontPin);
+	bumper_arr[1] = digitalRead(hindPin);
+	bumper_arr[2] = digitalRead(rightPin);
+	bumper_arr[3] = digitalRead(leftPin);
+}
+	/*
  uint8_t measurement = -1; //returns -1 if error
  int value = 0;
  
@@ -299,5 +337,4 @@ uint8_t SirHenry::detect(uint8_t num)
   }
 
   return measurement;
-}
-
+  */

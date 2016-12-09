@@ -35,7 +35,11 @@ class SirHenry
     void colourEye(uint8_t red, uint8_t blue, uint8_t green);
     int getDist(void);
     void rotateHead(int angle);
-    uint8_t detect(uint8_t num);
+	uint8_t front_bumper();
+	uint8_t rear_bumper();
+	uint8_t left_bumper();
+	uint8_t right_bumper();
+    void detect(uint8_t bumper_arr[]);
   private:
     void motorA(uint8_t dir);
     void motorB(uint8_t dir);
