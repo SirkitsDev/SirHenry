@@ -44,13 +44,11 @@
 #define rightPin A2
 #define hindPin A3
 
-
 // todo - do this in a cleaner manner, if there is one.
 
 // globally accessible objects; 
 Servo myServo;
 NewPing sonar(triggerPin,echoPin, 300); //Trigger, Echo, maxDist(cm)
-
 
 SirHenry::SirHenry(void)
 {
@@ -78,7 +76,6 @@ SirHenry::SirHenry(void)
       pinMode(servoPin,OUTPUT);
 }
 
-
 void SirHenry::motorA(uint8_t dir)
 {
   if(dir == 0)
@@ -100,6 +97,7 @@ void SirHenry::motorA(uint8_t dir)
   delay(800);
   analogWrite(MotorABrakePin,0);
 }
+
 void SirHenry::motorB(uint8_t dir)
 {
   if(dir == 0)
@@ -121,19 +119,19 @@ void SirHenry::motorB(uint8_t dir)
   delay(800);
   analogWrite(MotorBBrakePin,0);
 }
-void SirHenry::motorAB(uint8_t dir)
-{
-  if(dir==0)
-  {
+
+void SirHenry::motorAB(uint8_t dir){
+
+  if(dir==0){
+	  
     digitalWrite(MotorADirectionPin,LOW); 
     analogWrite(MotorABrakePin,255);
 
     digitalWrite(MotorBDirectionPin,LOW);
     analogWrite(MotorBBrakePin,255);
-  }
-
-  else
-  {
+  } 
+  else{
+	  
     digitalWrite(MotorADirectionPin,HIGH);
     analogWrite(MotorABrakePin,255);
 
@@ -145,78 +143,67 @@ void SirHenry::motorAB(uint8_t dir)
   analogWrite(MotorABrakePin,0);
   analogWrite(MotorBBrakePin,0);
 }
-void SirHenry::moveForeward(int dist)
-{
-  for(uint8_t i = 0; i<dist;i++)
-  {
+void SirHenry::moveForeward(int dist){
+  for(uint8_t i = 0; i<dist;i++){
     motorAB(0);
   }
 }
-void SirHenry::moveBackward(int dist)
-{
-  for(uint8_t i = 0; i<dist;i++)
-  {
+void SirHenry::moveBackward(int dist){
+  for(uint8_t i = 0; i<dist;i++){
     motorAB(1);
   }
 }
-void SirHenry::turnLeft(void)
-{
+void SirHenry::turnLeft(void){
   motorB(1);
 }
-void SirHenry::turnRight(void)
-{
+void SirHenry::turnRight(void){
   motorA(1);
 }
 
-
 void SirHenry::colourEye(uint8_t red, uint8_t green, uint8_t blue){
-	
-	/* 	This function controls the RGB LED of the robot.
-	 *  A desired RGB tuple has to be passed to the function in the following format: (R, G, B)
-	 * 	The function then sets the values of the individual pins on the LED module
-	 * 	
-	 * 	Params:
-	 * 		uint8_t red: Red value of RGB tuple
-	 * 		uint8_t green: Green value of RGB tuple
-	 * 		uint8_t blue: Blue value of RGB tuple
-	 * 	
-	 * 	Output: 
-	 * 		None
-	 * 
-	 * 	Some RGB combinations:
-	 * 							191,191,191 -white
-								0,0,0       - OFF
-                                0,255,0     -pure green
-                                255,0,0     -pure red
-								0,0,255     -pure blue
-							
-	  							232,32,32   -pink
-                                28,200,28   -nice green
-                                191,64,191  -light purple
-                                255,128,0   -bright yellow
-                                255,0,128   -bright purple
-                                0,255,128   -cyan
-                                0,128,255   -light blue
-                                128,0,255   -bluish-purple
-                                64,0,255    -violet-ish
-                                0,64,128    -light-cyan
-                                128,64,64   -purplish-silver
-	 */
-		
-	  // Setting the corresponding pins' values
-	  // 255-value since LED module's colours are 'inverted'
-	  
-	  if((red>=0)&&(red<=255)){
-			analogWrite(redPin,255-red);
-	  }
-  
-	  if((green>=0)&&(green<=255)){
-			analogWrite(greenPin,255-green);
-	  }
+    
+/* 	This function controls the RGB LED of the robot.
+ *  A desired RGB tuple has to be passed to the function in the following format: (R, G, B)
+ * 	The function then sets the values of the individual pins on the LED module
+ *
+ * 	Params:
+ * 		uint8_t red: Red value of RGB tuple
+ * 		uint8_t green: Green value of RGB tuple
+ * 		uint8_t blue: Blue value of RGB tuple
+ *
+ * 	Output:
+ * 		None
+ *
+ * 	Some RGB combinations:
+        191,191,191 -white
+        0,0,0       - OFF
+        0,255,0     -pure green
+        255,0,0     -pure red
+        0,0,255     -pure blue
+        232,32,32   -pink
+        28,200,28   -nice green
+        191,64,191  -light purple
+        255,128,0   -bright yellow
+        255,0,128   -bright purple
+        0,255,128   -cyan
+        0,128,255   -light blue
+        128,0,255   -bluish-purple
+        64,0,255    -violet-ish
+        0,64,128    -light-cyan
+        128,64,64   -purplish-silver
+ */
 
-	  if((blue>=0)&&(blue<=255)){
-			analogWrite(bluePin,255-blue);
-	  }
+// Setting the corresponding pins' values
+// 255-value since LED module's colours are 'inverted'
+
+ if((red>=0)&&(red<=255))
+	analogWrite(redPin,255-red);
+  
+ if((green>=0)&&(green<=255))
+	analogWrite(greenPin,255-green);
+
+ if((blue>=0)&&(blue<=255))
+	analogWrite(bluePin,255-blue);
 }
 
 void SirHenry::rotateHead(int angle)
@@ -232,6 +219,7 @@ void SirHenry::rotateHead(int angle)
   myServo.write(actual);
   delay(200);
 }
+
 int SirHenry::getDist()
 {
   int echo = sonar.ping_median(5);
@@ -273,13 +261,13 @@ uint8_t SirHenry::right_bumper(){
 }
 
 void SirHenry::detect(uint8_t bumper_arr[]){
-	
-	bumper_arr[0] = digitalRead(frontPin);
-	bumper_arr[1] = digitalRead(hindPin);
-	bumper_arr[2] = digitalRead(rightPin);
-	bumper_arr[3] = digitalRead(leftPin);
+    
+    bumper_arr[0] = digitalRead(frontPin);
+    bumper_arr[1] = digitalRead(hindPin);
+    bumper_arr[2] = digitalRead(rightPin);
+    bumper_arr[3] = digitalRead(leftPin);
 }
-	/*
+    /*
  uint8_t measurement = -1; //returns -1 if error
  int value = 0;
  
