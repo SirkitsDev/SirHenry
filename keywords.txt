@@ -1,0 +1,8 @@
+﻿SirHenry	KEYWORD1
+moveForeward	KEYWORD2
+moveBackward	KEYWORD2
+turnLeft	KEYWORD2
+turnRight	KEYWORD2
+colourEye	KEYWORD2
+getDist	KEYWORD2
+rotateHead	KEYWORD2
