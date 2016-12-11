@@ -72,14 +72,12 @@ SirHenry::SirHenry(void)
       pinMode(rightPin,INPUT);
       pinMode(hindPin,INPUT);
 
-   // Servo:
+      // Servo:
       pinMode(servoPin,OUTPUT);
 }
 
-void SirHenry::motorA(uint8_t dir)
-{
-  if(dir == 0)
-  {
+void SirHenry::motorA(uint8_t dir){
+  if(dir == 0){
     // dir = 0 - backwards
     //  therefore direction pin (Mn = low)
     // then write pwm signal to En pin
@@ -98,10 +96,8 @@ void SirHenry::motorA(uint8_t dir)
   analogWrite(MotorABrakePin,0);
 }
 
-void SirHenry::motorB(uint8_t dir)
-{
-  if(dir == 0)
-  {
+void SirHenry::motorB(uint8_t dir){
+  if(dir == 0){
     // dir = 0 - backwards
     //  therefore direction pin (Mn = low)
     // then write pwm signal to En pin
@@ -206,28 +202,33 @@ void SirHenry::colourEye(uint8_t red, uint8_t green, uint8_t blue){
 	analogWrite(bluePin,255-blue);
 }
 
-void SirHenry::rotateHead(int angle)
-{
-  int actual = 90;
+void SirHenry::rotateHead(int angle){
+  // Angle in degrees
+  // Rotates to that angle position. Not rotating that amount of degrees from current point
+  
+  // Making sure angle is between -85 and 85 degrees
+  if (angle > 85)
+	  angle = 85;
+  if (angle < -85)
+	  angle = -85;
+  
   myServo.attach(servoPin);
 
-  if((angle>=-85)&&(angle<=85))
-  {
-    actual = 90+angle;
-  }
-
-  myServo.write(actual);
-  delay(200);
+  if((angle>=-85)&&(angle<=85)){ // Again make sure angle is between -85 and 85 before adjusting servo
+	myServo.write(90+angle);
+	delay(200);
+  } 
 }
 
-int SirHenry::getDist()
-{
+
+int SirHenry::getDist(){
+
   int echo = sonar.ping_median(5);
   int dist = sonar.convert_cm(echo);
-  
   return dist;
 }
 
+//Bumper methods
 uint8_t SirHenry::front_bumper(){
 
     if(digitalRead(frontPin) == HIGH)
