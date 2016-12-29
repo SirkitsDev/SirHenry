@@ -1,25 +1,61 @@
 #include <Servo.h>
 #include <NewPing.h>
 #include <SirHenry.h>
+
 SirHenry bot;
+
+int closest_dist = 20;
+int head_straight = 11;
+int clear_path_dist = 40;
+
 void setup() {
   Serial.begin(115200);
+  bot.rotateHead(head_straight); // Reset head
+  delay(800);
+  bot.rotateHead(-85); //Turn head right
+  delay(800);
+  bot.rotateHead(85); //Turn head left
+  delay(800);
+  bot.rotateHead(head_straight); // Reset head
+  delay(800);
 }
 
 void loop() {
-
+  
+  
   int dist = bot.getDist();
-  if (dist < 10){
+  if (dist < closest_dist){
       bot.colourEye(255,0,0); //Red
-  } else if ((dist >= 10)&&(dist<=30)) {
+  } else if ((dist >= closest_dist)&&(dist<=60)) {
       bot.colourEye(255,255,0); //Yellow
   } else{
       bot.colourEye(0,255,0); //Green
   }
 
-  if (dist < 5){ //If really close to an object
-    bot.moveBackward(1);
-    bot.turnRight();
+  if (dist < closest_dist){ //If really close to an object
+    
+    bot.rotateHead(-85); //Turn head right
+    delay(100);
+    dist = bot.getAvgDist();
+
+    if (dist > clear_path_dist){ // Check if path to the right is clear
+      bot.rotateHead(head_straight); //Reset head
+      bot.colourEye(0,255,0); //Green
+      bot.turnRight();
+    } 
+    else{
+      bot.rotateHead(85); //Turn head left
+      delay(250);
+      dist = bot.getAvgDist();
+      if (dist > clear_path_dist){ // Check if path to the left is clear
+        bot.rotateHead(head_straight); //Reset head
+        bot.colourEye(0,255,0); //Green
+        bot.turnLeft();
+      } else{ // If front, left and right is obstructed
+        bot.rotateHead(head_straight); //Reset head
+        bot.moveBackward(1);
+      }
+    }
     
   } else if (bot.front_bumper() == 0){ //If front bumper hits object not seen by 'eyes'
     bot.moveBackward(1);
@@ -31,5 +67,5 @@ void loop() {
   } else{ // If no object in front of robot and no collision
     bot.moveForeward(1);
   }
-  
+  //delay(2000);
 }

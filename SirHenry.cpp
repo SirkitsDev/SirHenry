@@ -50,31 +50,32 @@
 Servo myServo;
 NewPing sonar(triggerPin,echoPin, 300); //Trigger, Echo, maxDist(cm)
 
-SirHenry::SirHenry(void)
-{
+SirHenry::SirHenry(void){
   // Setting up pin modes:
   
-    // RGB LED pins:
-      pinMode(redPin, OUTPUT); // red pin
-      pinMode(bluePin, OUTPUT); // blue pin
-      pinMode(greenPin, OUTPUT); //green pin
-      
-    // Motor Control pins:
-      
-      pinMode(MotorABrakePin,OUTPUT);       //Channel A Brake Pin
-      pinMode(MotorBBrakePin,OUTPUT);       //Channel B Brake Pin
-      pinMode(MotorADirectionPin,OUTPUT);      //Channel A Direction Pin
-      pinMode(MotorBDirectionPin,OUTPUT);      //Channel B Direction Pin
-      
-    // Bumper pins:
-      pinMode(leftPin,INPUT);
-      pinMode(frontPin,INPUT);
-      pinMode(rightPin,INPUT);
-      pinMode(hindPin,INPUT);
+  // RGB LED pins:
+  pinMode(redPin, OUTPUT); // red pin
+  pinMode(bluePin, OUTPUT); // blue pin
+  pinMode(greenPin, OUTPUT); //green pin
+  
+  // Motor Control pins:
+  pinMode(MotorABrakePin,OUTPUT);       //Channel A Brake Pin
+  pinMode(MotorBBrakePin,OUTPUT);       //Channel B Brake Pin
+  pinMode(MotorADirectionPin,OUTPUT);      //Channel A Direction Pin
+  pinMode(MotorBDirectionPin,OUTPUT);      //Channel B Direction Pin
+  
+  // Bumper pins:
+  pinMode(leftPin,INPUT);
+  pinMode(frontPin,INPUT);
+  pinMode(rightPin,INPUT);
+  pinMode(hindPin,INPUT);
 
-      // Servo:
-      pinMode(servoPin,OUTPUT);
+  // Servo:
+  pinMode(servoPin,OUTPUT);
 }
+
+
+// <START> -- PRIVATE METHODS --
 
 void SirHenry::motorA(uint8_t dir){
   if(dir == 0){
@@ -118,7 +119,7 @@ void SirHenry::motorB(uint8_t dir){
 
 void SirHenry::motorAB(uint8_t dir){
 
-  if(dir==0){
+  if(dir==0){ //Forward
 	  
     digitalWrite(MotorADirectionPin,LOW); 
     analogWrite(MotorABrakePin,255);
@@ -126,7 +127,7 @@ void SirHenry::motorAB(uint8_t dir){
     digitalWrite(MotorBDirectionPin,LOW);
     analogWrite(MotorBBrakePin,255);
   } 
-  else{
+  else{ //Backward
 	  
     digitalWrite(MotorADirectionPin,HIGH);
     analogWrite(MotorABrakePin,255);
@@ -139,28 +140,46 @@ void SirHenry::motorAB(uint8_t dir){
   analogWrite(MotorABrakePin,0);
   analogWrite(MotorBBrakePin,0);
 }
+
+// -- PRIVATE METHODS -- <END>
+
+
+// <START> -- PUBLIC METHODS --
+
 void SirHenry::moveForeward(int dist){
+/* Method instructs both motors to rotate forward for a 'dist' amount of times.
+ * */
   for(uint8_t i = 0; i<dist;i++){
     motorAB(0);
   }
 }
+
 void SirHenry::moveBackward(int dist){
+/* Method instructs both motors to rotate backward for a 'dist' amount of times.
+ * */
   for(uint8_t i = 0; i<dist;i++){
     motorAB(1);
   }
 }
+
 void SirHenry::turnLeft(void){
+/* This method instructs the robot to turn LEFT by instructing the right-side
+ * motor to spin at maximum speed. The left-side wheel is thus stationary.
+ * */
   motorB(1);
 }
+
 void SirHenry::turnRight(void){
+/* This method instructs the robot to turn RIGHT by instructing the left-side
+ * motor to spin at maximum speed. The right-side wheel is thus stationary.
+ * */
   motorA(1);
 }
 
 void SirHenry::colourEye(uint8_t red, uint8_t green, uint8_t blue){
-    
-/* 	This function controls the RGB LED of the robot.
- *  A desired RGB tuple has to be passed to the function in the following format: (R, G, B)
- * 	The function then sets the values of the individual pins on the LED module
+/* 	This method controls the RGB LED of the robot.
+ *  A desired RGB parameters has to be passed to the method in the following format: (R, G, B)
+ * 	The method then sets the values of the individual pins on the LED module
  *
  * 	Params:
  * 		uint8_t red: Red value of RGB tuple
@@ -188,10 +207,9 @@ void SirHenry::colourEye(uint8_t red, uint8_t green, uint8_t blue){
         0,64,128    -light-cyan
         128,64,64   -purplish-silver
  */
-
+ 
 // Setting the corresponding pins' values
-// 255-value since LED module's colours are 'inverted'
-
+// 255-(value) since LED module's colours are 'inverted'
  if((red>=0)&&(red<=255))
 	analogWrite(redPin,255-red);
   
@@ -227,6 +245,19 @@ int SirHenry::getDist(){
   int dist = sonar.convert_cm(echo);
   return dist;
 }
+
+int SirHenry::getAvgDist(){
+  int echo = 0;
+  int dist = 0;
+  
+  for (uint8_t i = 0; i <= 5; i++){
+	echo = sonar.ping_median(5);
+    dist += sonar.convert_cm(echo);
+  }
+  dist = (int)dist/5;
+  return dist;
+}
+
 
 //Bumper methods
 uint8_t SirHenry::front_bumper(){
@@ -268,6 +299,9 @@ void SirHenry::detect(uint8_t bumper_arr[]){
     bumper_arr[2] = digitalRead(rightPin);
     bumper_arr[3] = digitalRead(leftPin);
 }
+
+// -- PUBLIC METHODS -- <END>
+
     /*
  uint8_t measurement = -1; //returns -1 if error
  int value = 0;
