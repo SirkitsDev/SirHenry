@@ -8,6 +8,8 @@ int closest_dist = 20;
 int head_straight = 11;
 int clear_path_dist = 40;
 
+// NOTE: THIS IS STILL THE SAME AS example2. WORK IN PROGRESS
+
 void setup() {
   Serial.begin(115200);
   bot.rotateHead(head_straight); // Reset head
@@ -34,6 +36,7 @@ void loop() {
 
   if (dist < closest_dist){ //If really close to an object
     
+    bot.stop();
     bot.rotateHead(-85); //Turn head right
     delay(100);
     dist = bot.getDist();
@@ -65,7 +68,7 @@ void loop() {
     bot.turnRight();
     
   } else{ // If no object in front of robot and no collision
-    bot.moveForward(1);
+     bot.move(255);
   }
   //delay(2000);
 }

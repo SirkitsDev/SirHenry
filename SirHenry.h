@@ -28,8 +28,12 @@ class SirHenry
   // convention as per the Arduio library style guide. See www.arduino.cc/en/Hacking/LibraryTutorial for more details.
   
     SirHenry();
-    void moveForeward(int dist);
+	void move(int speed);
+	void stop();
+    void moveForward(int dist);
     void moveBackward(int dist);
+	void moveForwardDetailed(int speed, int time);
+	void moveBackwardDetailed(int speed, int time);
     void turnLeft(void);
     void turnRight(void);
     void colourEye(uint8_t red, uint8_t blue, uint8_t green);
@@ -45,6 +49,9 @@ class SirHenry
     void motorA(uint8_t dir);
     void motorB(uint8_t dir);
     void motorAB(uint8_t dir);
+	void motorAControl(uint8_t dir, int speed, int time);
+	void motorBControl(uint8_t dir, int speed, int time);
+	void motorABControl(uint8_t dir, int speed, int time);
     
 };
 

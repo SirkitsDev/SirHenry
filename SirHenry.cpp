@@ -6,13 +6,14 @@
   ## todo - document functions properly
 
   Functions:
-    *void moveForeward(int dist);
+    *void moveForward(int dist);
     *void moveBackward(int dist);
     *void turnLeft();
     *void turnRight();
     *void colourEye(uint8_t red, uint8_t blue, uint8_t green);
     *int getDist();
     *void rotateHead();
+	* TODO: Add the rest of methods here
 
   Setup Details:
     * Left Bumper is connected to pin A0
@@ -28,7 +29,6 @@
 #include "Servo.h"
 
 // Defining Pin Connections:
-
 #define redPin 6
 #define bluePin 5
 #define greenPin 3
@@ -77,6 +77,146 @@ SirHenry::SirHenry(void){
 
 // <START> -- PRIVATE METHODS --
 
+void SirHenry::motorAControl(uint8_t dir, int speed, int time){
+   /*
+    * This function controls motor A. It sets the direction of rotation, speed 
+	* and time that the motor is active.
+	* 
+	* Params:
+	* 	uint8_t dir: '0' for backwards (anti-clockwise) and any other integer (e.g. '1') to 
+	* 				go forwards (clockwise).
+	* 	int speed: Between 0 and 255. 255 is maximum speed.
+	* 	int time: The time in milliseconds that the motor turns
+	* 
+	* Returns:
+	* 	None
+	* 
+	* */
+	
+  // Making sure that the speed integer is between 0 and 255
+  if (speed > 255){
+	  speed = 255;
+  } else if (speed < 0){
+	  speed = 0;
+  }
+  
+  // Sending signals to the motor
+  if(dir == 0){ // Backwards (anit-clockwise)
+  
+    // Setting dir = 0 is the command to go backwards
+    digitalWrite(MotorADirectionPin,LOW); // Therefore direction pin (MN pin) = LOW
+    analogWrite(MotorABrakePin,speed); // Then write pwm signal (between 0 and 255) to 'EN' pin (motorABrakePin)
+  }
+
+  else{ // Else go forward (clockwise)
+    digitalWrite(MotorADirectionPin,HIGH); // Therefore direction pin (MN pin) = HIGH
+    analogWrite(MotorABrakePin,speed); // Then write pwm signal (between 0 and 255) to 'EN' pin (motorABrakePin)
+  }
+	
+  // Letting the motor run for 'time' milliseconds
+  delay(time);
+  // Stop the motor
+  analogWrite(MotorABrakePin,0);
+}
+
+void SirHenry::motorBControl(uint8_t dir, int speed, int time){
+   /*
+    * This function controls motor B. It sets the direction of rotation, speed 
+	* and time that the motor is active.
+	* 
+	* Params:
+	* 	uint8_t dir: '0' for backwards (anti-clockwise) and any other integer (e.g. '1') to 
+	* 				go forwards (clockwise).
+	* 	int speed: Between 0 and 255. 255 is maximum speed.
+	* 	int time: The time in milliseconds that the motor turns (must be >= 0).
+	* 
+	* Returns:
+	* 	None
+	* 
+	* */
+	
+  // Making sure that the speed integer is between 0 and 255
+  if (speed > 255){
+	  speed = 255;
+  } else if (speed < 0){
+	  speed = 0;
+  }
+  
+  // Making sure the time is positive
+  if (time <= 0){
+	  time = 0;
+  }
+  
+  // Sending signals to the motor
+  if(dir == 0){ // Backwards (anti-clockwise)
+    // Setting dir = 0 is the command to go backwards
+    digitalWrite(MotorBDirectionPin,LOW); // Therefore direction pin (MN pin) = LOW
+    analogWrite(MotorBBrakePin,speed); // Then write pwm signal (between 0 and 255) to 'EN' pin (motorABrakePin)
+  }
+
+  else{ // Else turn forward (clockwise)
+    digitalWrite(MotorBDirectionPin,HIGH); // Therefore direction pin (MN pin) = HIGH
+    analogWrite(MotorBBrakePin,speed); // Then write pwm signal (between 0 and 255) to 'EN' pin (motorABrakePin)
+  }
+	
+  // Letting the motor run for 'time' milliseconds
+  delay(time);
+  // Stop the motor
+  analogWrite(MotorBBrakePin,0);
+}
+
+void SirHenry::motorABControl(uint8_t dir, int speed, int time){
+   /*
+    * This function controls motor A and B together. It sets the direction of rotation, speed 
+	* and time that the motors are active.
+	* 
+	* Params:
+	* 	uint8_t dir: '0' for backwards (anti-clockwise) and any other integer (e.g. '1') to 
+	* 				go forwards (clockwise).
+	* 	int speed: Between 0 and 255. 255 is maximum speed.
+	* 	int time: The time in milliseconds that the motor turns (must be >= 0).
+	* 
+	* Returns:
+	* 	None
+	* 
+	* */
+	
+   // Making sure that the speed integer is between 0 and 255
+  if (speed > 255){
+	  speed = 255;
+  } else if (speed < 0){
+	  speed = 0;
+  }
+  
+  // Making sure the time is positive
+  if (time <= 0){
+	  time = 0;
+  }
+
+  if(dir==0){ //Forward
+	  
+    digitalWrite(MotorADirectionPin,LOW); 
+    analogWrite(MotorABrakePin,speed);
+
+    digitalWrite(MotorBDirectionPin,LOW);
+    analogWrite(MotorBBrakePin,speed);
+  } 
+  else{ //Backward
+	  
+    digitalWrite(MotorADirectionPin,HIGH);
+    analogWrite(MotorABrakePin,speed);
+
+    digitalWrite(MotorBDirectionPin,HIGH);
+    analogWrite(MotorBBrakePin,speed);
+  }
+  
+  // Letting the motors run for 'time' milliseconds
+  delay(time);
+  // Stops motors
+  analogWrite(MotorABrakePin,0);
+  analogWrite(MotorBBrakePin,0);
+}
+
 void SirHenry::motorA(uint8_t dir){
   if(dir == 0){
     // dir = 0 - backwards
@@ -98,6 +238,11 @@ void SirHenry::motorA(uint8_t dir){
 }
 
 void SirHenry::motorB(uint8_t dir){
+  /* 
+   * This fuction provides basic functionality to control Motor B.
+   * Function replaced by motorBControl().
+   * */
+   
   if(dir == 0){
     // dir = 0 - backwards
     //  therefore direction pin (Mn = low)
@@ -118,6 +263,15 @@ void SirHenry::motorB(uint8_t dir){
 }
 
 void SirHenry::motorAB(uint8_t dir){
+  /*
+   *  This function provides basic control for motor A and B together.
+   *  motorABControl() provides more customisability.
+   * 
+   * Params:
+   * 	uint8_t dir: '0' for backwards (anti-clockwise) and any other integer (e.g. '1') to 
+   * 				go forwards (clockwise).
+   * 
+   * */
 
   if(dir==0){ //Forward
 	  
@@ -146,7 +300,35 @@ void SirHenry::motorAB(uint8_t dir){
 
 // <START> -- PUBLIC METHODS --
 
-void SirHenry::moveForeward(int dist){
+void SirHenry::move(int speed){
+	/* 
+	 * Function simply enables both motors at the same time
+	 * to move clockwise at the specified speed
+	 * 
+	 * */
+	 
+	// Making sure that the speed integer is between 0 and 255
+	if (speed > 255){
+		speed = 255;
+	} else if (speed < 0){
+		speed = 0;
+	}
+	
+	digitalWrite(MotorADirectionPin,LOW); 
+    analogWrite(MotorABrakePin,speed);
+    digitalWrite(MotorBDirectionPin,LOW);
+    analogWrite(MotorBBrakePin,speed);
+}
+
+void SirHenry::stop(){
+  /*
+   * Function stops both motors
+   * 
+   * */
+  analogWrite(MotorABrakePin,0);
+  analogWrite(MotorBBrakePin,0);
+}
+void SirHenry::moveForward(int dist){
 /* Method instructs both motors to rotate forward for a 'dist' amount of times.
  * */
   for(uint8_t i = 0; i<dist;i++){
@@ -175,6 +357,19 @@ void SirHenry::turnRight(void){
  * */
   motorA(1);
 }
+
+void SirHenry::moveForwardDetailed(int speed, int time){
+/* Method instructs both motors to rotate forward for a 'dist' amount of times.
+ * */
+  motorABControl(0, speed, time);
+}
+
+void SirHenry::moveBackwardDetailed(int speed, int time){
+/* Method instructs both motors to rotate backward for a 'dist' amount of times.
+ * */
+  motorABControl(1, speed, time);
+}
+
 
 void SirHenry::colourEye(uint8_t red, uint8_t green, uint8_t blue){
 /* 	This method controls the RGB LED of the robot.
