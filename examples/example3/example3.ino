@@ -4,14 +4,16 @@
 
 SirHenry bot;
 
-int closest_dist = 20;
-int head_straight = 11;
+int closest_dist = 23;
+int head_straight = 11; // Head alignment offset
 int clear_path_dist = 40;
 
 // NOTE: THIS IS STILL THE SAME AS example2. WORK IN PROGRESS
 
 void setup() {
   Serial.begin(115200);
+
+  // Code to visually inspect the rotation and positioning of the head.
   bot.rotateHead(head_straight); // Reset head
   delay(800);
   bot.rotateHead(-85); //Turn head right
@@ -23,7 +25,6 @@ void setup() {
 }
 
 void loop() {
-  
   
   int dist = bot.getDist();
   if (dist < closest_dist){
@@ -57,6 +58,8 @@ void loop() {
       } else{ // If front, left and right is obstructed
         bot.rotateHead(head_straight); //Reset head
         bot.moveBackward(1);
+        bot.turnLeft();
+        bot.turnLeft();
       }
     }
     
@@ -70,5 +73,4 @@ void loop() {
   } else{ // If no object in front of robot and no collision
      bot.move(255);
   }
-  //delay(2000);
 }
