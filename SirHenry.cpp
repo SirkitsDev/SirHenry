@@ -1,6 +1,6 @@
 /*
   SirHenry.cpp - Library file allowing rudimentary use of the robot known as SirHenry, developed by Sirkits Pty Ltd.
-  Written by J.D Retief and J.C Truter 12/2016
+  Written by J.D Retief and J.C Truter 1/2017
 
   ## todo - add explanations of each function:
   ## todo - document functions properly
@@ -22,6 +22,7 @@
     * Back bumper is connected to pin A3
     * 
 */
+
 // Necessary Includes:
 #include "Arduino.h"
 #include "SirHenry.h"
@@ -44,9 +45,7 @@
 #define rightPin A2
 #define hindPin A3
 
-// todo - do this in a cleaner manner, if there is one.
-
-// globally accessible objects; 
+// Globally accessible objects; 
 Servo myServo;
 NewPing sonar(triggerPin,echoPin, 300); //Trigger, Echo, maxDist(cm)
 
@@ -218,17 +217,21 @@ void SirHenry::motorABControl(uint8_t dir, int speed, int time){
 }
 
 void SirHenry::motorA(uint8_t dir){
-  if(dir == 0){
-    // dir = 0 - backwards
-    //  therefore direction pin (Mn = low)
-    // then write pwm signal to En pin
+	  /* 
+   * This fuction provides basic functionality to control Motor B.
+   * Function replaced by motorAControl().
+   * 
+   * Look at motorAControl() for explinations of commands used below.
+   * */
+	
+  if(dir == 0){ // Backwards (anti-clockwise)
 
     digitalWrite(MotorADirectionPin,LOW); 
     analogWrite(MotorABrakePin,255);
   }
 
-  else{
-    //something
+  else{ // Forwards (clockwise)
+  
     digitalWrite(MotorADirectionPin,HIGH);
     analogWrite(MotorABrakePin,255);
   }
@@ -241,19 +244,18 @@ void SirHenry::motorB(uint8_t dir){
   /* 
    * This fuction provides basic functionality to control Motor B.
    * Function replaced by motorBControl().
+   * 
+   * Look at motorBControl() for explinations of commands used below.
    * */
    
-  if(dir == 0){
-    // dir = 0 - backwards
-    //  therefore direction pin (Mn = low)
-    // then write pwm signal to En pin
+  if(dir == 0){ // Backwards (anti-clockwise)
+    
 
     digitalWrite(MotorBDirectionPin,LOW);
     analogWrite(MotorBBrakePin,255);
   }
-
-  else{
-    //something
+  else{ // Forwards (clockwise)
+  
     digitalWrite(MotorBDirectionPin,HIGH);
     analogWrite(MotorBBrakePin,255);
   }
@@ -321,6 +323,7 @@ void SirHenry::move(int speed){
 }
 
 void SirHenry::stop(){
+	
   /*
    * Function stops both motors
    * 
@@ -328,6 +331,7 @@ void SirHenry::stop(){
   analogWrite(MotorABrakePin,0);
   analogWrite(MotorBBrakePin,0);
 }
+
 void SirHenry::moveForward(int dist){
 /* Method instructs both motors to rotate forward for a 'dist' amount of times.
  * */
@@ -344,18 +348,39 @@ void SirHenry::moveBackward(int dist){
   }
 }
 
+// TODO - Make turn funtions that do not have a hardcoded turn radius.
 void SirHenry::turnLeft(void){
 /* This method instructs the robot to turn LEFT by instructing the right-side
  * motor to spin at maximum speed. The left-side wheel is thus stationary.
  * */
-  motorB(1);
+  //motorB(1);
+  digitalWrite(MotorADirectionPin,LOW); 
+  digitalWrite(MotorBDirectionPin,HIGH);
+  
+  analogWrite(MotorABrakePin,255);
+  analogWrite(MotorBBrakePin,255);
+  
+  delay(525);
+  
+  analogWrite(MotorABrakePin,0);
+  analogWrite(MotorBBrakePin,0);
 }
 
 void SirHenry::turnRight(void){
 /* This method instructs the robot to turn RIGHT by instructing the left-side
  * motor to spin at maximum speed. The right-side wheel is thus stationary.
  * */
-  motorA(1);
+  //motorA(1);
+  digitalWrite(MotorADirectionPin,HIGH);
+  digitalWrite(MotorBDirectionPin,LOW);
+  
+  analogWrite(MotorABrakePin,255);
+  analogWrite(MotorBBrakePin,255);
+  
+  delay(525);
+  
+  analogWrite(MotorABrakePin,0);
+  analogWrite(MotorBBrakePin,0);
 }
 
 void SirHenry::moveForwardDetailed(int speed, int time){
@@ -496,63 +521,3 @@ void SirHenry::detect(uint8_t bumper_arr[]){
 }
 
 // -- PUBLIC METHODS -- <END>
-
-    /*
- uint8_t measurement = -1; //returns -1 if error
- int value = 0;
- 
-  if(num == 1)
-  {
-    value = digitalRead(frontPin);
-    if(value == HIGH)
-    {
-      measurement = 0;
-    }
-    else
-    {
-      measurement = 1;
-    }
-  }
-  else if(num==2)
-  {
-    value = digitalRead(leftPin);
-    if(value == HIGH)
-    {
-      measurement = 0;
-    }
-    else
-    {
-      measurement = 1;
-    }
-  }
-  else if(num==3)
-  {
-    value = digitalRead(hindPin);
-    if(value == HIGH)
-    {
-      measurement = 0;
-    }
-    else
-    {
-      measurement = 1;
-    }
-  }
-  else if(num==4)
-  {
-    value = digitalRead(rightPin);
-    if(value == HIGH)
-    {
-      measurement = 0;
-    }
-    else
-    {
-      measurement = 1;
-    }
-  }
-  else
-  {
-    // do nothing, error value has already been set up  
-  }
-
-  return measurement;
-  */
