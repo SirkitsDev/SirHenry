@@ -16,7 +16,7 @@
  *  - Configure the controller as follows:
  *  
  *  Up: '1'
- *  Down: '2'
+ *  Down: '0'
  *  Left: 'a'
  *  Right 'b'
  *  

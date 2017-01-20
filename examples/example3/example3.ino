@@ -5,7 +5,7 @@
 SirHenry bot;
 
 int closest_dist = 23;
-int head_straight = 11; // Head alignment offset
+int head_straight = 25; // Head alignment offset
 int clear_path_dist = 40;
 
 // NOTE: THIS IS STILL THE SAME AS example2. WORK IN PROGRESS
