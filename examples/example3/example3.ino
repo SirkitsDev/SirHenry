@@ -5,10 +5,8 @@
 SirHenry bot;
 
 int closest_dist = 23;
-int head_straight = 25; // Head alignment offset
-int clear_path_dist = 40;
-
-// NOTE: THIS IS STILL THE SAME AS example2. WORK IN PROGRESS
+int head_straight = 10; // Head alignment offset
+int clear_path_dist = 30;
 
 void setup() {
   Serial.begin(115200);
@@ -50,16 +48,34 @@ void loop() {
     else{
       bot.rotateHead(85); //Turn head left
       delay(250);
-      dist = bot.getDist();
+      
       if (dist > clear_path_dist){ // Check if path to the left is clear
         bot.rotateHead(head_straight); //Reset head
         bot.colourEye(0,255,0); //Green
         bot.turnLeft();
       } else{ // If front, left and right is obstructed
-        bot.rotateHead(head_straight); //Reset head
-        bot.moveBackward(1);
-        bot.turnLeft();
-        bot.turnLeft();
+
+        while (true){
+          bot.moveBackward(1); // Reverse
+          dist = bot.getDist(); 
+
+          if (dist > clear_path_dist){ // Check if path to the left is clear
+            bot.rotateHead(head_straight); //Reset head
+            bot.colourEye(0,255,0); //Green
+            bot.turnLeft();
+            break;
+          } else{
+            bot.rotateHead(-85); //Turn head right
+            delay(100);
+            dist = bot.getDist();
+            if (dist > clear_path_dist){ // Check if path to the right is clear
+              bot.rotateHead(head_straight); //Reset head
+              bot.colourEye(0,255,0); //Green
+              bot.turnRight();
+              break;
+            }
+          }
+        }
       }
     }
     

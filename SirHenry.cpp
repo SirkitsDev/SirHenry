@@ -466,19 +466,6 @@ int SirHenry::getDist(){
   return dist;
 }
 
-int SirHenry::getAvgDist(){
-  int echo = 0;
-  int dist = 0;
-  
-  for (uint8_t i = 0; i <= 5; i++){
-	echo = sonar.ping_median(5);
-    dist += sonar.convert_cm(echo);
-  }
-  dist = (int)dist/5;
-  return dist;
-}
-
-
 //Bumper methods
 uint8_t SirHenry::front_bumper(){
 
