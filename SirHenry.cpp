@@ -1,9 +1,9 @@
 /*
   SirHenry.cpp - Library file allowing rudimentary use of the robot known as SirHenry, developed by Sirkits Pty Ltd.
-  Written by J.D Retief and J.C Truter 1/2017
+  Written by J.D Retief and J.C Truter 2/2017
 
-  ## todo - add explanations of each function:
-  ## todo - document functions properly
+  ## TODO - add explanations of each function:
+  ## TODO - document functions properly
 
   Functions:
     *void moveForward(int dist);
@@ -45,6 +45,8 @@
 #define rightPin A2
 #define hindPin A3
 
+// MOTOR A is the right side motor, and MOTOR B is the left side motor.
+
 // Globally accessible objects; 
 Servo myServo;
 NewPing sonar(triggerPin,echoPin, 300); //Trigger, Echo, maxDist(cm)
@@ -77,13 +79,13 @@ SirHenry::SirHenry(void){
 // <START> -- PRIVATE METHODS --
 
 void SirHenry::motorAControl(uint8_t dir, int speed, int time){
-   /*
-    * This function controls motor A. It sets the direction of rotation, speed 
+	/*
+	* This function controls motor A (right side). It sets the direction of rotation, speed 
 	* and time that the motor is active.
 	* 
 	* Params:
-	* 	uint8_t dir: '0' for backwards (anti-clockwise) and any other integer (e.g. '1') to 
-	* 				go forwards (clockwise).
+	* 	uint8_t dir: '0' for forwards (clockwise rotation) and any other integer (e.g. '1') to 
+	* 	go backwards (anti-clockwise rotation).
 	* 	int speed: Between 0 and 255. 255 is maximum speed.
 	* 	int time: The time in milliseconds that the motor turns
 	* 
@@ -100,16 +102,15 @@ void SirHenry::motorAControl(uint8_t dir, int speed, int time){
   }
   
   // Sending signals to the motor
-  if(dir == 0){ // Backwards (anit-clockwise)
+  if(dir == 0){ // Forwwards (clockwise)
   
-    // Setting dir = 0 is the command to go backwards
-    digitalWrite(MotorADirectionPin,LOW); // Therefore direction pin (MN pin) = LOW
-    analogWrite(MotorABrakePin,speed); // Then write pwm signal (between 0 and 255) to 'EN' pin (motorABrakePin)
+    digitalWrite(MotorADirectionPin,LOW); // Direction pin (MN pin) = LOW
+    analogWrite(MotorABrakePin,speed); // Write pwm signal (between 0 and 255) to 'EN' pin (motorABrakePin)
   }
 
-  else{ // Else go forward (clockwise)
-    digitalWrite(MotorADirectionPin,HIGH); // Therefore direction pin (MN pin) = HIGH
-    analogWrite(MotorABrakePin,speed); // Then write pwm signal (between 0 and 255) to 'EN' pin (motorABrakePin)
+  else{ // Else go backwards (anti-clockwise)
+    digitalWrite(MotorADirectionPin,HIGH); // Direction pin (MN pin) = HIGH
+    analogWrite(MotorABrakePin,speed); // Write pwm signal (between 0 and 255) to 'EN' pin (motorABrakePin)
   }
 	
   // Letting the motor run for 'time' milliseconds
@@ -119,15 +120,15 @@ void SirHenry::motorAControl(uint8_t dir, int speed, int time){
 }
 
 void SirHenry::motorBControl(uint8_t dir, int speed, int time){
-   /*
-    * This function controls motor B. It sets the direction of rotation, speed 
+	/*
+	* This function controls motor B (left side). It sets the direction of rotation, speed 
 	* and time that the motor is active.
 	* 
 	* Params:
-	* 	uint8_t dir: '0' for backwards (anti-clockwise) and any other integer (e.g. '1') to 
-	* 				go forwards (clockwise).
+	* 	uint8_t dir: '0' for forwards (clockwise rotation) and any other integer (e.g. '1') to 
+	* 	go backwards (anti-clockwise rotation).
 	* 	int speed: Between 0 and 255. 255 is maximum speed.
-	* 	int time: The time in milliseconds that the motor turns (must be >= 0).
+	* 	int time: The time in milliseconds that the motor turns
 	* 
 	* Returns:
 	* 	None
@@ -147,15 +148,15 @@ void SirHenry::motorBControl(uint8_t dir, int speed, int time){
   }
   
   // Sending signals to the motor
-  if(dir == 0){ // Backwards (anti-clockwise)
-    // Setting dir = 0 is the command to go backwards
-    digitalWrite(MotorBDirectionPin,LOW); // Therefore direction pin (MN pin) = LOW
-    analogWrite(MotorBBrakePin,speed); // Then write pwm signal (between 0 and 255) to 'EN' pin (motorABrakePin)
+  if(dir == 0){ // Forwards (clockwise)
+
+    digitalWrite(MotorBDirectionPin,LOW); // Direction pin (MN pin) = LOW
+    analogWrite(MotorBBrakePin,speed); // Write pwm signal (between 0 and 255) to 'EN' pin (motorABrakePin)
   }
 
-  else{ // Else turn forward (clockwise)
-    digitalWrite(MotorBDirectionPin,HIGH); // Therefore direction pin (MN pin) = HIGH
-    analogWrite(MotorBBrakePin,speed); // Then write pwm signal (between 0 and 255) to 'EN' pin (motorABrakePin)
+  else{ // Else turn backwards (anti-clockwise)
+    digitalWrite(MotorBDirectionPin,HIGH); // Direction pin (MN pin) = HIGH
+    analogWrite(MotorBBrakePin,speed); // Write pwm signal (between 0 and 255) to 'EN' pin (motorABrakePin)
   }
 	
   // Letting the motor run for 'time' milliseconds
@@ -170,8 +171,8 @@ void SirHenry::motorABControl(uint8_t dir, int speed, int time){
 	* and time that the motors are active.
 	* 
 	* Params:
-	* 	uint8_t dir: '0' for backwards (anti-clockwise) and any other integer (e.g. '1') to 
-	* 				go forwards (clockwise).
+	* 	uint8_t dir: '0' for forwards (clockwise rotation) and any other integer (e.g. '1') to 
+	* 	go backwards (anti-clockwise rotation).
 	* 	int speed: Between 0 and 255. 255 is maximum speed.
 	* 	int time: The time in milliseconds that the motor turns (must be >= 0).
 	* 
@@ -224,13 +225,13 @@ void SirHenry::motorA(uint8_t dir){
    * Look at motorAControl() for explinations of commands used below.
    * */
 	
-  if(dir == 0){ // Backwards (anti-clockwise)
+  if(dir == 0){ // Forward (clockwise)
 
     digitalWrite(MotorADirectionPin,LOW); 
     analogWrite(MotorABrakePin,255);
   }
 
-  else{ // Forwards (clockwise)
+  else{ // Backwards (anti-clockwise)
   
     digitalWrite(MotorADirectionPin,HIGH);
     analogWrite(MotorABrakePin,255);
@@ -248,13 +249,13 @@ void SirHenry::motorB(uint8_t dir){
    * Look at motorBControl() for explinations of commands used below.
    * */
    
-  if(dir == 0){ // Backwards (anti-clockwise)
+  if(dir == 0){ // Forward (clockwise)
     
 
     digitalWrite(MotorBDirectionPin,LOW);
     analogWrite(MotorBBrakePin,255);
   }
-  else{ // Forwards (clockwise)
+  else{ // Backwards (anti-clockwise)
   
     digitalWrite(MotorBDirectionPin,HIGH);
     analogWrite(MotorBBrakePin,255);
@@ -270,8 +271,8 @@ void SirHenry::motorAB(uint8_t dir){
    *  motorABControl() provides more customisability.
    * 
    * Params:
-   * 	uint8_t dir: '0' for backwards (anti-clockwise) and any other integer (e.g. '1') to 
-   * 				go forwards (clockwise).
+   * 	uint8_t dir: '0' to go forward (clockwise) and any other integer (e.g. '1') to 
+   * 	go backward (anti-clockwise).
    * 
    * */
 
@@ -305,7 +306,7 @@ void SirHenry::motorAB(uint8_t dir){
 void SirHenry::move(int speed){
 	/* 
 	 * Function simply enables both motors at the same time
-	 * to move clockwise at the specified speed
+	 * to move forward (clockwise) at the specified speed
 	 * 
 	 * */
 	 
@@ -317,9 +318,9 @@ void SirHenry::move(int speed){
 	}
 	
 	digitalWrite(MotorADirectionPin,LOW); 
-    analogWrite(MotorABrakePin,speed);
-    digitalWrite(MotorBDirectionPin,LOW);
-    analogWrite(MotorBBrakePin,speed);
+	analogWrite(MotorABrakePin,speed);
+	digitalWrite(MotorBDirectionPin,LOW);
+	analogWrite(MotorBBrakePin,speed);
 }
 
 void SirHenry::stop(){
@@ -348,12 +349,12 @@ void SirHenry::moveBackward(int dist){
   }
 }
 
-// TODO - Make turn funtions that do not have a hardcoded turn radius.
+
 void SirHenry::turnLeft(void){
-/* This method instructs the robot to turn LEFT by instructing the right-side
- * motor to spin at maximum speed. The left-side wheel is thus stationary.
+/* This method instructs the robot to turn LEFT by instructing the right-side motor to turn clockwise
+ * and left-side motor to turn anti-clockwise at maximum speed for 0.525 seconds.
  * */
-  //motorB(1);
+ 
   digitalWrite(MotorADirectionPin,LOW); 
   digitalWrite(MotorBDirectionPin,HIGH);
   
@@ -366,11 +367,51 @@ void SirHenry::turnLeft(void){
   analogWrite(MotorBBrakePin,0);
 }
 
-void SirHenry::turnRight(void){
-/* This method instructs the robot to turn RIGHT by instructing the left-side
- * motor to spin at maximum speed. The right-side wheel is thus stationary.
+void SirHenry::turnLeft(int rightSpeed, int leftSpeed, int time){
+/* This method is used to make a left-hand turn with the robot. The speed of both motors and the anount 
+ * of time the wheels spin is adjustable. Thus the speed and angle of the turn can be controlled.
+ * 
+ * Params:
+ *   int rightSpeed: Speed of motor A (right side). Value between 0 and 255.
+ *   int leftSpeed: Speed of motor B (left side). Value between 0 and 255.
+ *   int time: Amount of time in milliseconds that the motors will rotate.
+ * 
+ * Returns:
+ *   None
  * */
-  //motorA(1);
+ 
+	// Making sure that the speed integers are between 0 and 255
+  if (rightSpeed > 255){
+	  rightSpeed = 255;
+  } else if (rightSpeed < 0){
+	  rightSpeed = 0;
+  }
+	
+  if (leftSpeed > 255){
+	  leftSpeed = 255;
+  } else if (leftSpeed < 0){
+	  leftSpeed = 0;
+  }
+	
+	if (time < 0) time = 0;
+
+  digitalWrite(MotorADirectionPin,LOW); 
+  digitalWrite(MotorBDirectionPin,HIGH);
+  
+  analogWrite(MotorABrakePin,rightSpeed);
+  analogWrite(MotorBBrakePin,leftSpeed);
+  
+  delay(time);
+  
+  analogWrite(MotorABrakePin,0);
+  analogWrite(MotorBBrakePin,0);
+}
+
+void SirHenry::turnRight(void){
+/* This method instructs the robot to turn RIGHT by instructing the right-side motor to turn anti-clockwise
+ * and left-side motor to turn clockwise at maximum speed for 0.5 seconds.
+ * */
+
   digitalWrite(MotorADirectionPin,HIGH);
   digitalWrite(MotorBDirectionPin,LOW);
   
@@ -382,6 +423,47 @@ void SirHenry::turnRight(void){
   analogWrite(MotorABrakePin,0);
   analogWrite(MotorBBrakePin,0);
 }
+
+void SirHenry::turnRight(int rightSpeed, int leftSpeed, int time){
+/* This method is used to make a right-hand turn with the robot. The speed of both motors and the anount 
+ * of time the wheels spin is adjustable. Thus the speed and angle of the turn can be controlled.
+ * 
+ * Params:
+ *   int rightSpeed: Speed of motor A (right side). Value between 0 and 255.
+ *   int leftSpeed: Speed of motor B (left side). Value between 0 and 255.
+ *   int time: Amount of time in milliseconds that the motors will rotate.
+ * 
+ * Returns:
+ *   None
+ * */
+	
+	// Making sure that the speed integers are between 0 and 255
+  if (rightSpeed > 255){
+	  rightSpeed = 255;
+  } else if (rightSpeed < 0){
+	  rightSpeed = 0;
+  }
+	
+  if (leftSpeed > 255){
+	  leftSpeed = 255;
+  } else if (leftSpeed < 0){
+	  leftSpeed = 0;
+  }
+	
+	if (time < 0) time = 0;
+	
+  digitalWrite(MotorADirectionPin,HIGH); 
+  digitalWrite(MotorBDirectionPin,LOW);
+  
+  analogWrite(MotorABrakePin,rightSpeed);
+  analogWrite(MotorBBrakePin,leftSpeed);
+  
+  delay(time);
+  
+  analogWrite(MotorABrakePin,0);
+  analogWrite(MotorBBrakePin,0);
+}
+
 
 void SirHenry::moveForwardDetailed(int speed, int time){
 /* Method instructs both motors to rotate forward for a 'dist' amount of times.
@@ -457,7 +539,6 @@ void SirHenry::rotateHead(int angle){
 	delay(200);
   } 
 }
-
 
 int SirHenry::getDist(){
 
