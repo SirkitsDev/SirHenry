@@ -3,12 +3,12 @@
 #include <SirHenry.h>
 
 /* Basic testing of Sir Henry.
- *  By Cobus Truter (3 Feb 2017)
+ *  By Cobus Truter (Feb 2017)
  *  
  *  This sketch provides a basic framework to test and debug the hardware connections of Sir Henry. 
  *  
  *  
- *  Head alignment test - The servo may have an offset - thus 0 degrees does not always mean that the head is facing straight. 
+ *  TODO: Explination
  *  
  */
 
