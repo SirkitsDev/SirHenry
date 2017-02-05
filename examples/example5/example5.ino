@@ -5,7 +5,9 @@
 /* Sir Henry example5.
  *  By Cobus Truter (20 Jan 2017)
  *  
- *  Demo code for 21 January 2017
+ *  Demo code for 21 January 2017.
+ *  
+ *  TODO: Explanation.
  *  
  */
  

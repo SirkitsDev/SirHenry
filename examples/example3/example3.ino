@@ -2,24 +2,24 @@
 #include <NewPing.h>
 #include <SirHenry.h>
 
+/* Sir Henry example3.
+ *  By Cobus Truter (Dec 2016)
+ *  
+ *  This example aims to provide basic autonomous navigaion.
+ *  Updated and slightly improved version of example2.ino.
+ *  
+ *  TODO: Explanation.
+ */
+ 
 SirHenry bot;
 
 int closest_dist = 23;
-int head_straight = 10; // Head alignment offset
+int head_straight = 10; // Head alignment offset. Adjust accordingly
 int clear_path_dist = 30;
 
 void setup() {
   Serial.begin(115200);
-
-  // Code to visually inspect the rotation and positioning of the head.
   bot.rotateHead(head_straight); // Reset head
-  delay(800);
-  bot.rotateHead(-85); //Turn head right
-  delay(800);
-  bot.rotateHead(85); //Turn head left
-  delay(800);
-  bot.rotateHead(head_straight); // Reset head
-  delay(800);
 }
 
 void loop() {

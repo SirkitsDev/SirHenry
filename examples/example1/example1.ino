@@ -2,13 +2,18 @@
 #include <NewPing.h>
 #include <SirHenry.h>
 SirHenry bot;
+
+/* First basic test of components.
+ *  By JD Retief (Dec 2016).
+ *  
+ *  TODO - Replaced by basic_testing.ino
+ */
+
 void setup() {
-  // put your setup code here, to run once:
   Serial.begin(115200);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
   int dist = 0;
   
   bot.colourEye(232,32,32);

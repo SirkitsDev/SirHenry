@@ -2,10 +2,19 @@
 #include <NewPing.h>
 #include <SirHenry.h>
 
+/* Sir Henry example2.
+ *  By Cobus Truter (Dec 2016)
+ *  
+ *  This example aims to provide basic autonomous navigaion.
+ *  
+ *  TODO: Explanation.
+ */
+ 
+
 SirHenry bot;
 
 int closest_dist = 20;
-int head_straight = 11;
+int head_straight = 11; // Head alignment offset. Adjust accordingly
 int clear_path_dist = 40;
 
 void setup() {
@@ -67,5 +76,4 @@ void loop() {
   } else{ // If no object in front of robot and no collision
     bot.moveForward(1);
   }
-  //delay(2000);
 }
