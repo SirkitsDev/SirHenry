@@ -27,7 +27,7 @@ class SirHenry
   // Here go all of the publicly accessible functions. All of them must use a camelBack naming 
   // convention as per the Arduio library style guide. See www.arduino.cc/en/Hacking/LibraryTutorial for more details.
   
-	SirHenry();
+	SirHenry(uint8_t max = 85, int min = -85);
 	void move(int speed);
 	void stop();
 	void moveForward(int dist);
@@ -39,7 +39,7 @@ class SirHenry
 	void turnRight(void);
 	void turnRight(int rightSpeed, int leftSpeed, int time);
 	void colourEye(uint8_t red, uint8_t blue, uint8_t green);
-	int getDist(void);
+	int getDist(uint8_t samples=10);
 	void rotateHead(int angle);
 	uint8_t front_bumper();
 	uint8_t rear_bumper();

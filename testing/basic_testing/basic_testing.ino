@@ -12,7 +12,7 @@
  *  
  */
 
-SirHenry bot;
+SirHenry bot(85,-75);
 String MENU_MSG = "\n  ------ MAIN MENU ------ \nChoose a test to run: \n0 - Head alignment \n1 - Distance sensor test \n2 - Bumper switch test \n3 - RGB LED test \n4 - Movement test\n\nEnter 'x' to return to the Main Menu at any time. \nEnter '!' at any time to exit program.";
 String dataString = "";
 char colourStates[7] = {'r', 'g', 'b', 'y', 'p', 'o', 'w'};
@@ -36,6 +36,7 @@ void loop() {
           
           if (Serial.available() > 0){
             dataString = Serial.readString();
+            Serial.println(dataString);
             dataString.trim();
           }
           
@@ -91,7 +92,7 @@ void loop() {
               Serial.print("Max undershoot:  ");
               Serial.print(avgDist - shortestDist);
               Serial.println("cm.");
-              Serial.println("\nEnter 's' to run the test again.\nMake sure the sensor is stationary and facing a large, flat surface!");
+              Serial.println("\nEnter 's' to run the test again.");
               
             } else if (inputChar == 'x'){
               Serial.println(MENU_MSG);
@@ -103,7 +104,7 @@ void loop() {
       case '2':
         // Bumper switch test
         Serial.println("\n  ------ BUMPER SWITCH TEST ------");
-        Serial.println("\nPress the bumper switches individually. \nThe name of the pressed switch will then be displayed.");
+        Serial.println("\nPress the bumper switches individually - the result will be displayed.");
         uint8_t bumper_arr[4];
         while (true){
           if (Serial.available() > 0){
@@ -123,8 +124,8 @@ void loop() {
       case '3':
         // RGB LED test
         Serial.println("\n  ------ BUMPER SWITCH TEST ------");
-        Serial.println("\nPress 'c' to switch to the next colour. \nThe name of the colour will be printed to the console - this is the CORRECT colour. \nThe LED's colour should be the same as the displayed colour name.");
-        Serial.println("\nWHITE - (255,255,255)");
+        Serial.println("\nPress 'c' to switch to the next colour. \nThe LED's colour should be the same as the displayed colour name.");
+        //Serial.println("\nWHITE - (255,255,255)");
         bot.colourEye(255,255,255);
         uint8_t pos; pos = 0;
         while (true){
@@ -179,7 +180,7 @@ void loop() {
       case '4':
         // Movement test
         Serial.println("\n  ------ MOVEMENT TEST ------");
-        Serial.println("\n'f' - Move forward\n'b' - Move backward\n'l' - Turn left (90 degrees) \n'r' - Turn right (90 degrees)");
+        Serial.println("\n'f' - Move forward\n'b' - Move backward\n'l' - Turn left\n'r' - Turn right");
         while (true){
           if (Serial.available() > 0){
             char inputChar = Serial.read();
@@ -189,8 +190,8 @@ void loop() {
             } else if (inputChar == '!') exit_program();
             else if (inputChar == 'f') bot.moveForward(1);
             else if (inputChar == 'b') bot.moveBackward(1);
-            else if (inputChar == 'l') bot.turnLeft();
-            else if (inputChar == 'r') bot.turnRight();
+            else if (inputChar == 'l') bot.turnLeft(255,255,1000);
+            else if (inputChar == 'r') bot.turnRight(255,255,1000);
           }
         }
         break;

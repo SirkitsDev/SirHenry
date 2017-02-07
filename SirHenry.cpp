@@ -51,7 +51,14 @@
 Servo myServo;
 NewPing sonar(triggerPin,echoPin, 300); //Trigger, Echo, maxDist(cm)
 
-SirHenry::SirHenry(void){
+// Servo limit parameters
+uint8_t maxLimit;
+int minLimit;
+
+SirHenry::SirHenry(uint8_t max = 85, int min = -85){
+	// Max: Upper limit of the servo's allowable movement range (in degrees)
+	// Min: Lower limit of the servo's allowable movement range (in degrees)
+	
   // Setting up pin modes:
   
   // RGB LED pins:
@@ -73,6 +80,15 @@ SirHenry::SirHenry(void){
 
   // Servo:
   pinMode(servoPin,OUTPUT);
+	
+	// Setting servo limits
+	if (max > 85) max = 85;
+	if (max < 0) max = 0;
+	if (min > 0) min = 0;
+	if (min < -85) min = -85;
+	
+	maxLimit = max;
+	minLimit = min;
 }
 
 
@@ -219,7 +235,7 @@ void SirHenry::motorABControl(uint8_t dir, int speed, int time){
 
 void SirHenry::motorA(uint8_t dir){
 	  /* 
-   * This fuction provides basic functionality to control Motor B.
+   * This fuction provides basic functionality to control Motor A.
    * Function replaced by motorAControl().
    * 
    * Look at motorAControl() for explinations of commands used below.
@@ -352,7 +368,7 @@ void SirHenry::moveBackward(int dist){
 
 void SirHenry::turnLeft(void){
 /* This method instructs the robot to turn LEFT by instructing the right-side motor to turn clockwise
- * and left-side motor to turn anti-clockwise at maximum speed for 0.525 seconds.
+ * and left-side motor to turn anti-clockwise at maximum speed for 1 second.
  * */
  
   digitalWrite(MotorADirectionPin,LOW); 
@@ -361,7 +377,7 @@ void SirHenry::turnLeft(void){
   analogWrite(MotorABrakePin,255);
   analogWrite(MotorBBrakePin,255);
   
-  delay(525);
+  delay(1000);
   
   analogWrite(MotorABrakePin,0);
   analogWrite(MotorBBrakePin,0);
@@ -409,7 +425,7 @@ void SirHenry::turnLeft(int rightSpeed, int leftSpeed, int time){
 
 void SirHenry::turnRight(void){
 /* This method instructs the robot to turn RIGHT by instructing the right-side motor to turn anti-clockwise
- * and left-side motor to turn clockwise at maximum speed for 0.5 seconds.
+ * and left-side motor to turn clockwise at maximum speed for 1 second.
  * */
 
   digitalWrite(MotorADirectionPin,HIGH);
@@ -418,7 +434,7 @@ void SirHenry::turnRight(void){
   analogWrite(MotorABrakePin,255);
   analogWrite(MotorBBrakePin,255);
   
-  delay(525);
+  delay(1000);
   
   analogWrite(MotorABrakePin,0);
   analogWrite(MotorBBrakePin,0);
@@ -526,23 +542,20 @@ void SirHenry::rotateHead(int angle){
   // Angle in degrees
   // Rotates to that angle position. Not rotating that amount of degrees from current point
   
-  // Making sure angle is between -85 and 85 degrees
-  if (angle > 85)
-	  angle = 85;
-  if (angle < -85)
-	  angle = -85;
-  
+  // Making sure angle is between limits
+  if (angle > maxLimit) angle = maxLimit;
+  if (angle < minLimit) angle = minLimit;
+	  
   myServo.attach(servoPin);
 
-  if((angle>=-85)&&(angle<=85)){ // Again make sure angle is between -85 and 85 before adjusting servo
 	myServo.write(90+angle);
 	delay(200);
-  } 
+	
 }
 
-int SirHenry::getDist(){
+int SirHenry::getDist(uint8_t samples=5){
 
-  int echo = sonar.ping_median(5);
+  int echo = sonar.ping_median(samples);
   int dist = sonar.convert_cm(echo);
   return dist;
 }
