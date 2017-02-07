@@ -10,83 +10,150 @@
  *  
  *  TODO: Explanation.
  */
- 
-SirHenry bot;
 
-int closest_dist = 23;
-int head_straight = 10; // Head alignment offset. Adjust accordingly
-int clear_path_dist = 30;
+// Servo rotation limitation variables. Adjust according to your own results from basic_testing.ino.
+const uint8_t maxAngle = 85; // Maximum allowable angle of servo rotation
+const int minAngle = -75; // Minimum allowable angle of servo rotation
+const int head_straight = 0; // Head alignment offset. Adjust accordingly
+
+const uint8_t closest_dist = 25; // Distance at which an object is deemed 'too close'
+const uint8_t clear_path_dist = 25; // If there is no objects present within this distance, the path is deemed clear
+uint16_t dist;
+uint8_t bumper_arr[4];
+
+SirHenry bot(maxAngle,minAngle);
 
 void setup() {
   Serial.begin(115200);
-  bot.rotateHead(head_straight); // Reset head
+  bot.rotateHead(head_straight); // Reset head to center
+  delay(250);
+  bot.move(255);
 }
 
 void loop() {
   
-  int dist = bot.getDist();
-  if (dist < closest_dist){
+  dist = bot.getDist();
+
+  // Adjusting colour of LED according to distance from object
+  if (dist <= closest_dist){
       bot.colourEye(255,0,0); //Red
-  } else if ((dist >= closest_dist)&&(dist<=60)) {
+  } else if ((dist > closest_dist)&&(dist <= clear_path_dist)) {
+      bot.colourEye(255,140,0); //Orange
+  } else if ((dist > clear_path_dist)&&(dist <= 100)){
       bot.colourEye(255,255,0); //Yellow
-  } else{
-      bot.colourEye(0,255,0); //Green
-  }
-
-  if (dist < closest_dist){ //If really close to an object
-    
+  } else bot.colourEye(0,255,0); //Green
+  
+  if (dist < closest_dist){ //If too close to an object
     bot.stop();
-    bot.rotateHead(-85); //Turn head right
-    delay(100);
-    dist = bot.getDist();
-
-    if (dist > clear_path_dist){ // Check if path to the right is clear
-      bot.rotateHead(head_straight); //Reset head
-      bot.colourEye(0,255,0); //Green
-      bot.turnRight();
-    } 
-    else{
-      bot.rotateHead(85); //Turn head left
-      delay(250);
-      
-      if (dist > clear_path_dist){ // Check if path to the left is clear
-        bot.rotateHead(head_straight); //Reset head
-        bot.colourEye(0,255,0); //Green
+    switch (scoutPath()){
+      case 'c':
+        bot.move(255);
+        break;
+      case 'l':
         bot.turnLeft();
-      } else{ // If front, left and right is obstructed
-
-        while (true){
-          bot.moveBackward(1); // Reverse
-          dist = bot.getDist(); 
-
-          if (dist > clear_path_dist){ // Check if path to the left is clear
-            bot.rotateHead(head_straight); //Reset head
-            bot.colourEye(0,255,0); //Green
-            bot.turnLeft();
-            break;
-          } else{
-            bot.rotateHead(-85); //Turn head right
-            delay(100);
-            dist = bot.getDist();
-            if (dist > clear_path_dist){ // Check if path to the right is clear
-              bot.rotateHead(head_straight); //Reset head
-              bot.colourEye(0,255,0); //Green
-              bot.turnRight();
-              break;
-            }
-          }
-        }
-      }
+        bot.move(255);
+        break;
+      case 'r':
+        bot.turnRight();
+        bot.move(255);
+        break;
+      case 'n':
+        escape();
+        break;
     }
-    
-  } else if (bot.front_bumper() == 0){ //If front bumper hits object not seen by 'eyes'
-    bot.moveBackward(1);
-    if (bot.rear_bumper() == 0){ // If object is behind robot
-      bot.moveForward(1);
-    }
-    bot.turnRight();
-    
-  } else{ // If no object in front of robot and no collision
-     bot.move(255);
   }
+
+  // Collision detection
+  bot.detect(bumper_arr);
+  if(bumper_arr[0] == 0 || bumper_arr[1] == 0 || bumper_arr[2] == 0 || bumper_arr[3] == 0){ // If a collision is detected
+    bot.stop();
+    
+    if (bumper_arr[0] == 0){ // Front bumper
+      bot.moveBackward(1);
+      if (bumper_arr[2] == 0){ //If front and right bumper
+        bot.turnLeft();
+        bot.move(255);
+        
+      } else if (bumper_arr[3] == 0){ //If front and left bumper
+          bot.turnRight();
+          bot.move(255);
+        
+      } else{ //Just front bumper
+          bot.rotateHead(maxAngle); //Rotate head left
+          delay(100);
+          uint16_t leftDist = bot.getDist(10);
+          delay(400);
+          bot.rotateHead(minAngle); //Rotate head right
+          uint16_t rightDist = bot.getDist(10);
+          
+          if (rightDist >= leftDist) bot.turnRight();
+          else bot.turnLeft();
+          bot.move(255);
+        }
+        
+    } else if (bumper_arr[1] == 0){ // If rear bumper
+      
+        if (bumper_arr[2] == 0) //If rear and right bumper
+          bot.turnLeft();
+        else if (bumper_arr[3] == 0) //If rear and left bumper
+          bot.turnRight();
+        switch (scoutPath()){
+          case 'c':
+            bot.move(255);
+            break;
+          case 'l':
+            bot.turnLeft();
+            bot.move(255);
+            break;
+          case 'r':
+            bot.turnRight();
+            bot.move(255);
+            break;
+          case 'n':
+            escape();
+            break;
+        }
+    } else if (bumper_arr[2] == 0){ // If right bumper
+        bot.turnLeft();
+        bot.move(255);
+    } else if (bumper_arr[3] == 0){ // If left bumper
+        bot.turnRight();
+        bot.move(255);
+    }
+  } //End collision detection
+} //End loop
+
+char scoutPath(){
+  // This function determines which path (left, right, center or None) is the optimal path to take
+  char result = 'n';
+  uint16_t resultDist;
+  bot.rotateHead(head_straight); //Reset head to center
+  uint16_t centerDist = bot.getDist(10);
+  bot.rotateHead(maxAngle); //Rotate head left
+  delay(100);
+  uint16_t leftDist = bot.getDist(10);
+  delay(400);
+  bot.rotateHead(minAngle); //Rotate head right
+  uint16_t rightDist = bot.getDist(10);
+  
+  if ((centerDist >= leftDist) && (centerDist >= rightDist)) {result = 'c'; resultDist = centerDist;}
+  else if ((leftDist >= centerDist) && (leftDist >= rightDist)) {result = 'l'; resultDist = leftDist;}
+  else if ((rightDist >= centerDist) && (rightDist >= leftDist)) {result = 'r'; resultDist = rightDist;}
+  
+  bot.rotateHead(head_straight); //Reset head to center
+  
+  if (result == 'n') return 'n';
+  else if (resultDist >= clear_path_dist) return result;
+  else return 'n';
 }
+
+void escape(){
+  while (true){
+    bot.colourEye(255,0,0); //Red
+    delay(500);
+    bot.colourEye(0,0,0); //Off
+    delay(500);
+  }
+  
+}
+
