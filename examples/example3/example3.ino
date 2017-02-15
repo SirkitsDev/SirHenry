@@ -3,10 +3,9 @@
 #include <SirHenry.h>
 
 /* Sir Henry example3.
- *  By Cobus Truter (Dec 2016)
+ *  By Cobus Truter (Feb 2016)
  *  
- *  This example aims to provide basic autonomous navigaion.
- *  Updated and slightly improved version of example2.ino.
+ *  This example aims to provide more 'thorough' autonomous navigaion.
  *  
  *  TODO: Explanation.
  */
