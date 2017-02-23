@@ -32,6 +32,7 @@ void setup() {
 void loop() {
   
   dist = bot.getDist();
+  bot.detect(bumper_arr);
 
   // Adjusting colour of LED according to distance from object
   if (dist <= closest_dist){
@@ -42,30 +43,9 @@ void loop() {
       bot.colourEye(255,255,0); //Yellow
   } else bot.colourEye(0,255,0); //Green
   
-  if (dist < closest_dist){ //If too close to an object
-    bot.stop();
-    switch (scoutPath()){
-      case 'c':
-        bot.move(255);
-        break;
-      case 'l':
-        bot.turnLeft();
-        bot.move(255);
-        break;
-      case 'r':
-        bot.turnRight();
-        bot.move(255);
-        break;
-      case 'n':
-        escape();
-        break;
-    }
-  }
-
-  // Collision detection
-  bot.detect(bumper_arr);
   if(bumper_arr[0] == 0 || bumper_arr[1] == 0 || bumper_arr[2] == 0 || bumper_arr[3] == 0){ // If a collision is detected
     bot.stop();
+    Serial.println("Collision");
     
     if (bumper_arr[0] == 0){ // Front bumper
       bot.moveBackward(1);
@@ -120,6 +100,27 @@ void loop() {
         bot.move(255);
     }
   } //End collision detection
+
+  if (dist < closest_dist){ //If too close to an object
+    bot.stop();
+    Serial.println("Close to object");
+    switch (scoutPath()){
+      case 'c':
+        bot.move(255);
+        break;
+      case 'l':
+        bot.turnLeft();
+        bot.move(255);
+        break;
+      case 'r':
+        bot.turnRight();
+        bot.move(255);
+        break;
+      case 'n':
+        escape();
+        break;
+    }
+  }
 } //End loop
 
 char scoutPath(){
@@ -146,13 +147,12 @@ char scoutPath(){
   else return 'n';
 }
 
-void escape(){
+void escape(){ // Temporary function. TODO: Resolve 'stuck' situations.
   while (true){
     bot.colourEye(255,0,0); //Red
     delay(500);
     bot.colourEye(0,0,0); //Off
     delay(500);
   }
-  
 }
 
