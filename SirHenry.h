@@ -39,7 +39,7 @@ class SirHenry
 	void turnRight(void);
 	void turnRight(int rightSpeed, int leftSpeed, int time);
 	void colourEye(uint8_t red, uint8_t blue, uint8_t green);
-	int getDist(uint8_t samples=10);
+	int getDist(uint8_t samples=5);
 	void rotateHead(int angle);
 	uint8_t front_bumper();
 	uint8_t rear_bumper();

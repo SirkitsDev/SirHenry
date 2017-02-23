@@ -1,5 +1,5 @@
 #include <Servo.h>
-#include <NewPing.h>
+#include <NewPing.h> // Tested with NewPing v1.8
 #include <SirHenry.h>
 
 /* Basic testing of Sir Henry.
