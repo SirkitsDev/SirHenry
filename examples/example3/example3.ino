@@ -15,9 +15,10 @@ const uint8_t maxAngle = 85; // Maximum allowable angle of servo rotation
 const int minAngle = -75; // Minimum allowable angle of servo rotation
 const int head_straight = 0; // Head alignment offset. Adjust accordingly
 
-const uint8_t closest_dist = 25; // Distance at which an object is deemed 'too close'
-const uint8_t clear_path_dist = 25; // If there is no objects present within this distance, the path is deemed clear
+const uint8_t closest_dist = 30; // Distance at which an object is deemed 'too close'
+const uint8_t clear_path_dist = 30; // If there is no objects present within this distance, the path is deemed clear
 uint16_t dist;
+char bestSide;
 uint8_t bumper_arr[4];
 
 SirHenry bot(maxAngle,minAngle);
@@ -32,6 +33,10 @@ void setup() {
 void loop() {
   
   dist = bot.getDist();
+  for(int i = 0; i < 5; i++){ // To account for 0cm results caused by sound absorption
+    if (dist == 0) break;
+    dist = bot.getDist();
+  }
   bot.detect(bumper_arr);
 
   // Adjusting colour of LED according to distance from object
@@ -127,6 +132,8 @@ char scoutPath(){
   // This function determines which path (left, right, center or None) is the optimal path to take
   char result = 'n';
   uint16_t resultDist;
+  
+  uint16_t bestSideDist;
   bot.rotateHead(head_straight); //Reset head to center
   uint16_t centerDist = bot.getDist(10);
   bot.rotateHead(maxAngle); //Rotate head left
@@ -136,9 +143,12 @@ char scoutPath(){
   bot.rotateHead(minAngle); //Rotate head right
   uint16_t rightDist = bot.getDist(10);
   
-  if ((centerDist >= leftDist) && (centerDist >= rightDist)) {result = 'c'; resultDist = centerDist;}
+  if ((rightDist >= centerDist) && (rightDist >= leftDist)) {result = 'r'; resultDist = rightDist;}
   else if ((leftDist >= centerDist) && (leftDist >= rightDist)) {result = 'l'; resultDist = leftDist;}
-  else if ((rightDist >= centerDist) && (rightDist >= leftDist)) {result = 'r'; resultDist = rightDist;}
+  else if ((centerDist >= leftDist) && (centerDist >= rightDist)) {result = 'c'; resultDist = centerDist;}
+
+  if (leftDist >= rightDist) bestSide = 'l';
+  else bestSide = 'r';
   
   bot.rotateHead(head_straight); //Reset head to center
   
@@ -148,11 +158,13 @@ char scoutPath(){
 }
 
 void escape(){ // Temporary function. TODO: Resolve 'stuck' situations.
-  while (true){
+
     bot.colourEye(255,0,0); //Red
     delay(500);
     bot.colourEye(0,0,0); //Off
     delay(500);
-  }
+    bot.moveBackward(2);
+    if (bestSide == 'l') bot.turnLeft(255,255,1500);
+    else bot.turnRight(255,255,1500);
 }
 
