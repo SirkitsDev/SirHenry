@@ -17,7 +17,7 @@ void loop() {
   int dist = 0;
   
   bot.colourEye(232,32,32);
-  bot.moveForeward(1);
+  bot.moveForward(1);
   bot.moveBackward(1);
   bot.colourEye(191,64,191);
   bot.turnLeft();

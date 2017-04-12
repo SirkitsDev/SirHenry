@@ -55,7 +55,7 @@ NewPing sonar(triggerPin,echoPin, 300); //Trigger, Echo, maxDist(cm)
 uint8_t maxLimit;
 int minLimit;
 
-SirHenry::SirHenry(uint8_t max = 85, int min = -85){
+SirHenry::SirHenry(uint8_t max, int min){
 	// Max: Upper limit of the servo's allowable movement range (in degrees)
 	// Min: Lower limit of the servo's allowable movement range (in degrees)
 	
@@ -553,7 +553,7 @@ void SirHenry::rotateHead(int angle){
 	
 }
 
-int SirHenry::getDist(uint8_t samples=5){
+int SirHenry::getDist(uint8_t samples){
 
   int echo = sonar.ping_median(samples);
   int dist = sonar.convert_cm(echo);
