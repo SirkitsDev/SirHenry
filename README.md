@@ -24,6 +24,13 @@ These lines allow the compiler to use the library.
 
 SirHenry bot;
 ```
+OR
+```
+#!arduino
+
+SirHenry bot(maxAngle,minAngle);
+```
+
 5. You are now ready to start writing your own programs that can make the robot do just about anything. Your imagination is the limit.
 6. Just in case this all seems a bit daunting, we have included two example programs in the library to give you a better idea of how things work.
 
