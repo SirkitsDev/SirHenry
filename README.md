@@ -1,4 +1,9 @@
+
 This is where the Arduino based library for the robot known as "Sir Henry", developed by Sirkits Pty Ltd., lives. The library can be used to perform basic actions with the robot, such as moving forward or rotating the head.
+
+Basic setup instructions are given below.
+Visit the [Wiki](https://github.com/SirkitsDev/SirHenry/wiki) for more detailed information.
+Visit the [Issues] page if you found a bug or error in the code. Feel free to suggest improvements or alterations!
 
 Getting the library to work:
 
@@ -12,7 +17,6 @@ Getting the library to work:
 #include <Servo.h>
 #include <NewPing.h>
 #include <SirHenry.h>
-
 ```
 
 These lines allow the compiler to use the library.
