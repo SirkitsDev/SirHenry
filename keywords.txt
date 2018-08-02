@@ -1,4 +1,4 @@
-﻿SirHenry	KEYWORD1
+SirHenry	KEYWORD1
 moveForeward	KEYWORD2
 moveBackward	KEYWORD2
 turnLeft	KEYWORD2
